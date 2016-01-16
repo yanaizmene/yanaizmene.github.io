@@ -1,0 +1,194 @@
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			#saveUAtwi encryptor
+		</title>
+		<link rel="stylesheet" type="text/javascript" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+		<style type="text/css">
+			body {
+				padding-bottom: 20px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="container">
+			<div class="row">
+				<div class="col-sm-10 col-sm-offset-1">
+					<h1>#saveUAtwi encryptor</h1>
+				
+
+					<form action="" method="post" id="save-ua-twitter">
+						<div class="row">
+							<div class="col-sm-6">
+								<h4>Ваш текст</h4>
+
+								<div class="form-group">
+									<label></label>
+									<textarea class="form-control" id="to-encrypt" style="min-height: 225px;"></textarea>
+								</div>
+								<hr />
+								<h4>Налаштування</h4>
+
+								<label>Відсоток літер що має бути закодованим</label>
+								<div class="row">
+									<div class="col-sm-4">
+										<div class="form-group">
+											<div class="input-group">
+												<input type="number" id="treshold" class="form-control" min="0" max="100" value="20" />
+												<div class="input-group-addon">%</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-sm-6">
+								<h4>Код</h4>
+								<div id="result"></div>
+
+								
+							</div>
+						</div>
+
+						
+					</form>
+
+
+					
+				</div>
+			</div>
+		</div>
+
+		<script src="https://code.jquery.com/jquery-2.2.0.min.js"></script>
+
+		<script>
+			$(function() {
+				var abetka = {
+					а: 'a',
+					б: '6', 
+					в: 'B', 
+					г: 'r', 
+					ґ: 'r', 
+					д: 'g', 
+					е: 'e', 
+					є: '(-', 
+					ж: '}I{', 
+					з: '3', 
+					и: 'u', 
+					і: 'i', 
+					ї: 'ї', 
+					й: 'I\'I', 
+					к: 'K', 
+					л: 'JI', 
+					м: 'M', 
+					н: '|-|', 
+					о: 'o', 
+					п: 'n', 
+					р: 'p', 
+					с: 'c', 
+					т: 'm', 
+					у: 'y', 
+					ф: 'qp', 
+					х: 'x', 
+					ц: 'II,', 
+					ч: '4', 
+					ш: 'III', 
+					щ: 'III,', 
+					ь: 'b', 
+					ю: 'I0', 
+					я: '9',
+
+					А: 'A',
+					Б: '6', 
+					В: 'B', 
+					Г: 'r', 
+					Ґ: 'r', 
+					Д: 'g', 
+					Е: 'e', 
+					Є: '(-', 
+					Ж: '}I{', 
+					З: '3', 
+					И: 'u', 
+					І: 'I', 
+					Ї: 'ї', 
+					Й: 'I\'I', 
+					К: 'K', 
+					Л: 'JI', 
+					М: 'M', 
+					Н: '|-|', 
+					О: 'O', 
+					П: 'n', 
+					Р: 'P', 
+					С: 'C', 
+					Т: 'm', 
+					У: 'Y', 
+					Ф: 'qp', 
+					Х: 'X', 
+					Ц: 'II,', 
+					Ч: '4', 
+					Ш: 'III', 
+					Щ: 'III,', 
+					Ь: 'b', 
+					Ю: 'I0', 
+					Я: '9'
+				}
+
+				var result_holder = $('#result');
+				
+				$('#treshold').on('keyup', function(e) {
+					treshold = $(this).val();
+				});
+
+				function encrypt(str)
+				{
+					var result = [];
+
+					var words = str.split(' ');
+
+					
+					$.each(words, function(i, word) {
+						var encrypted = [];
+
+						for(var i = 0; i < word.length; i++) {
+
+							var letter = word[i];
+
+							if(need_encrypt(word))
+								letter = (typeof(abetka[letter]) != 'undefined' ? abetka[letter] : letter)
+
+							encrypted.push(letter);
+						}
+
+						result.push(encrypted.join(''));
+						
+					});
+
+					return result.join(' ');
+				}	
+				
+				function need_encrypt(word)
+				{
+					return word.length > 2 && Math.round(Math.random() * 100) < ($('#treshold').val() / 100 * 100)
+				}		
+
+				$('#save-ua-twitter').on('submit', function(e) {
+					e.preventDefault();
+
+					result_holder.html(encrypt($('#to-encrypt').val()).replace(/\n/g,"<br /><br />"));
+				});
+
+				$('#to-encrypt').on('keyup', function() {
+					$('#save-ua-twitter').trigger('submit');
+				});
+
+				$('#treshold').on('change keyup', function() {
+
+					$('#save-ua-twitter').trigger('submit');
+				});
+				
+			});
+			
+		</script>
+	</body>
+</html>
